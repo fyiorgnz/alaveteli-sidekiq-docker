@@ -1,5 +1,9 @@
-FROM ruby
+FROM ruby:2.3.1
 MAINTAINER Caleb Tutty
+ARG SK_REPO_OWNER
+ARG SK_REPO_BRANCH
+ENV SK_REPO_OWNER ${SK_REPO_OWNER:-fyiorgnz}
+ENV SK_REPO_BRANCH ${SK_REPO_BRANCH:-sidekiq}
 
 # Set noninteractive mode for apt-get
 ENV DEBIAN_FRONTEND noninteractive
@@ -17,7 +21,7 @@ RUN apt-get -y install supervisor ca-certificates git postgresql-client build-es
   redis-server supervisor
 
 # Clone develop branch
-RUN git clone https://github.com/nzherald/alaveteli.git --branch sidekiq /opt/alaveteli
+RUN git clone https://github.com/$SK_REPO_OWNER/alaveteli.git --branch $SK_REPO_BRANCH /opt/alaveteli
 
 # Add yaml configuration which take environment variables
 ADD assets/database.yml /opt/alaveteli/config/database.yml
